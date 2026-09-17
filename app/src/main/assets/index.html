@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#14532d">
+  <meta name="description" content="Mi Compra: lista de compras instalable y offline.">
+    <link rel="icon" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>Mi Compra</title>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="brand">🛒 Mi Compra</div>
+      <div class="subtitle">Tu lista inteligente</div>
+    </div>
+    
+  </header>
+
+  <main>
+    <section id="homeView" class="view active" aria-labelledby="homeTitle">
+      <div class="hero">
+        <div>
+          <p class="eyebrow">COMPRA ACTUAL</p>
+          <h1 id="homeTitle">¿Qué te falta?</h1>
+          <p>Marcá productos en el catálogo y usá la lista mientras recorrés el súper.</p>
+        </div>
+        <button id="goShoppingBtn" class="btn btn-primary btn-large" type="button">Abrir mi lista</button>
+      </div>
+
+      <div class="stats" aria-live="polite">
+        <div class="stat"><strong id="statPending">0</strong><span>Pendientes</span></div>
+        <div class="stat"><strong id="statBought">0</strong><span>Comprados</span></div>
+        <div class="stat"><strong id="statProgress">0%</strong><span>Avance</span></div>
+      </div>
+
+      <section class="panel">
+        <div class="section-head"><h2>Faltantes marcados</h2><button id="homeCatalogBtn" class="link-btn" type="button">Ver catálogo</button></div>
+        <div id="homeNeeded" class="product-list"></div>
+      </section>
+    </section>
+
+    <section id="catalogView" class="view" aria-labelledby="catalogTitle">
+      <div class="section-head wrap">
+        <div><p class="eyebrow">CATÁLOGO</p><h1 id="catalogTitle">Productos</h1></div>
+        <button id="addProductBtn" class="btn btn-primary" type="button">+ Agregar</button>
+      </div>
+      <div class="filters">
+        <label class="search"><span>Buscar</span><input id="searchInput" type="search" placeholder="Leche, café, tomate…" autocomplete="off"></label>
+        <label><span>Categoría</span><select id="categoryFilter"><option value="">Todas</option></select></label>
+        <label><span>Supermercado</span><select id="storeFilter"><option value="">Todos</option></select></label>
+      </div>
+      <div id="catalogList" class="product-grid"></div>
+    </section>
+
+    <section id="shoppingView" class="view" aria-labelledby="shoppingTitle">
+      <div class="section-head wrap">
+        <div><p class="eyebrow">EN EL SUPERMERCADO</p><h1 id="shoppingTitle">Mi lista</h1></div>
+        <button id="finishBtn" class="btn btn-danger" type="button">Finalizar compra</button>
+      </div>
+      <div class="progress-card">
+        <div class="progress-line"><span id="progressText">0 de 0 comprados</span><strong id="progressPercent">0%</strong></div>
+        <div class="progress-track" aria-hidden="true"><div id="progressBar" class="progress-bar"></div></div>
+      </div>
+      <div class="shopping-columns">
+        <section>
+          <h2>Pendientes</h2>
+          <div id="pendingList" class="shopping-list"></div>
+        </section>
+        <section>
+          <h2>Comprados</h2>
+          <div id="boughtList" class="shopping-list"></div>
+        </section>
+      </div>
+    </section>
+
+    <section id="settingsView" class="view" aria-labelledby="settingsTitle">
+      <p class="eyebrow">DATOS Y RESPALDO</p>
+      <h1 id="settingsTitle">Configuración</h1>
+      <div class="panel settings-stack">
+        <div><h2>Respaldo</h2><p>Exportá tus productos y la lista actual. Podrás restaurarlos en otro teléfono.</p></div>
+        <div class="button-row">
+          <button id="exportBtn" class="btn" type="button">Exportar respaldo</button>
+          <label class="btn file-btn">Importar respaldo<input id="importInput" type="file" accept="application/json,.json"></label>
+        </div>
+      </div>
+      <div class="panel settings-stack">
+        <div><h2>Estado de instalación</h2><p id="installStatus">Comprobando…</p></div>
+        <button id="installBtn2" class="btn btn-primary hidden" type="button">Instalar Mi Compra</button>
+      </div>
+      <div class="panel settings-stack">
+        <div><h2>Restablecer</h2><p>Vuelve al catálogo inicial incluido con la aplicación.</p></div>
+        <button id="resetBtn" class="btn btn-danger" type="button">Restablecer datos</button>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav" aria-label="Navegación principal">
+    <button data-view="homeView" class="nav-btn active" type="button"><span>⌂</span>Inicio</button>
+    <button data-view="catalogView" class="nav-btn" type="button"><span>▦</span>Productos</button>
+    <button data-view="shoppingView" class="nav-btn" type="button"><span>✓</span>Mi lista</button>
+    <button data-view="settingsView" class="nav-btn" type="button"><span>⚙</span>Ajustes</button>
+  </nav>
+
+  <dialog id="productDialog">
+    <form id="productForm" method="dialog" class="dialog-form">
+      <div class="section-head"><h2 id="dialogTitle">Producto</h2><button id="closeDialogBtn" class="icon-btn" type="button" aria-label="Cerrar">×</button></div>
+      <input id="editId" type="hidden">
+      <label>Producto<input id="nameInput" required maxlength="100"></label>
+      <label>Categoría<input id="categoryInput" required maxlength="60" placeholder="Ej.: Almacén"></label>
+      <label>Presentación<input id="presentationInput" maxlength="60" placeholder="Ej.: 1 L, 500 g, por kg"></label>
+      <label>Supermercado habitual<input id="preferredStoreInput" maxlength="60" placeholder="BOX, Superseis, Areté"></label>
+      <label>Último precio (Gs.)<input id="priceInput" type="number" min="0" step="1" inputmode="numeric"></label>
+      <label>Cantidad para comprar<input id="qtyInput" maxlength="30" placeholder="Ej.: 2, 1 kg, 3 paquetes"></label>
+      <label>Notas<textarea id="notesInput" rows="3" maxlength="250"></textarea></label>
+      <div class="button-row end"><button id="deleteProductBtn" class="btn btn-danger hidden" type="button">Eliminar</button><button class="btn btn-primary" value="save" type="submit">Guardar</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js" defer></script>
+</body>
+</html>
